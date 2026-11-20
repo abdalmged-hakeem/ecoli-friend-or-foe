@@ -27,7 +27,6 @@ window.I18N = {
     shareText: (s) => `I judged ${s}/8 E. coli strains correctly in “The People v. E. coli”. Can you beat me?`,
     shareTitle: "The People v. E. coli",
     docTitle: "The People v. E. coli",
-    watchMenu: "Watch the trailer",
     evi: {
       icons: ["🔍", "⏱️", "🔬", "⚖️", "🧬", "👩‍⚖️", "🦠", "🍔"],
       names: ["Measured the defendant", "Watched it multiply", "Examined every part", "Heard both sides",
@@ -106,7 +105,6 @@ window.I18N = {
     shareText: (s) => `حكمتُ على ${s} من 8 سلالات E. coli بشكل صحيح في «الشعب ضد E. coli». هل تستطيع أن تتفوّق عليّ؟`,
     shareTitle: "الشعب ضد E. coli",
     docTitle: "الشعب ضد E. coli",
-    watchMenu: "شاهد التريلر",
     evi: {
       icons: ["🔍", "⏱️", "🔬", "⚖️", "🧬", "👩‍⚖️", "🦠", "🍔"],
       names: ["قِستَ المتهم", "شاهدتَ تكاثرها", "فحصتَ كل الأجزاء", "سمعتَ الطرفين",
@@ -209,7 +207,7 @@ window.I18N = {
       vSub: "بعض السلالات: <b class=\"r\">مذنبة.</b> النوع ككل: <b class=\"g\">بريء.</b>",
       credH: "كَتَبة المحكمة",
       credP: "<b>[أسماء الطلاب]</b><br>[القسم] · [الكلية] · [الجامعة]<br>المشرف: [اسم المشرف]<br>[اسم المهرجان · السنة]",
-      menu: "الأدلة", toTop2: "للأعلى", watch: "شاهد التريلر · 43 ثانية",
+      menu: "الأدلة", toTop2: "للأعلى",
       srcH: "المصادر",
       fine: "كل الرسوم أصلية، والخلايا ليست بمقياس رسم حقيقي. الموقع للتعليم وليس نصيحة طبية. ولا يجمع أي بيانات عنك.",
       top: "العودة إلى الأعلى ↑",

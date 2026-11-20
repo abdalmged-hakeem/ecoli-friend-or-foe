@@ -447,10 +447,3 @@ body[data-side="foe"] .knob { transform: translateX(100%); }
 .swimmer { animation: swim 1.6s ease-out both, drift-y 7s 1.6s ease-in-out infinite; }
 @keyframes drift-y { 25% { transform: translate(-6px, -7px) rotate(-1.2deg); } 60% { transform: translate(5px, 3px) rotate(.8deg); } }
 
-/* link from the hero to the trailer */
-.watch { display: inline-flex; align-items: center; gap: 9px; margin-top: 2px; padding: 9px 18px; border: 2.5px solid var(--rule); border-radius: 999px;
-  color: var(--dim); text-decoration: none; font: 600 15px var(--sans); transition: border-color .2s, color .2s; }
-.watch:hover, .watch:focus-visible { border-color: var(--ink); color: var(--ink); }
-.watch .play { font-size: 11px; color: var(--red); }
-.menu-panel a.ext { border-top: 2.5px solid var(--ink); border-radius: 0 0 10px 10px; color: var(--red); }
-.menu-panel a.ext::before { content: "▶"; font-size: 9px; color: var(--red); }

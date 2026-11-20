@@ -322,7 +322,7 @@
       const id = s.id || "credits";
       if (!s.id) s.id = "credits";
       return `<li><a href="#${id}"${done ? ' class="done"' : ""}><span class="tick" aria-hidden="true">${done ? "✓" : ""}</span>${h.textContent.trim()}</a></li>`;
-    }).join("") + `<li><a class="ext" href="trailer/"><span class="tick" aria-hidden="true"></span>${T().watchMenu}</a></li>`;
+    }).join("");
   }
   const closeMenu = () => { menuPanel.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); };
   menuBtn.addEventListener("click", () => {

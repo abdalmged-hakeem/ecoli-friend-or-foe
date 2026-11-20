@@ -30,11 +30,8 @@ This writes `site/index.html` with the artwork filled in. The artwork is drawn b
 
 Names, university and supervisor are placeholders in `src/index.html` (search for `[`).
 
-## The trailer
-`trailer/` is a 43-second looping trailer for a screen at the booth, built from the same artwork. Once the site is online it is at `<your-site>/trailer/`. Visitors reach it from a link on the home page and from the Exhibits menu, and the trailer has a link back. It is a separate page, so it costs visitors of the main site nothing. See `trailer/README.md`; rebuild it with `python3 scripts/build-trailer.py`.
-
 ## What to upload
-The whole `site/` folder, as it is (the trailer goes up with it). `src/` and this README are not needed online, but they don't hurt. All paths are relative, so the site works on GitHub Pages under any address.
+The whole `site/` folder, as it is. `src/` and this README are not needed online, but they don't hurt. All paths are relative, so the site works on GitHub Pages under any address.
 
 ## Rules it follows
 - No libraries, no CDNs, no tracking, no data collected.
