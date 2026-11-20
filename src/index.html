@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The People v. E. coli</title>
+<meta name="description" content="You are the judge. Meet E. coli, hear the defence and the prosecution, then decide: friend or foe?">
+<meta name="theme-color" content="#F2ECDD">
+<link rel="preload" href="assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='20' width='52' height='24' rx='12' fill='%23BFE3D6' stroke='%231B1A17' stroke-width='4'/%3E%3C/svg%3E">
+<script>try{var l=localStorage.getItem("lang");if(l==="ar"||(!l&&/^ar/i.test(navigator.language))){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}</script>
+</head>
+<body data-side="friend">
+
+<button class="lang" id="langBtn" type="button" aria-label="Change language"><span class="to-ar">عربي</span><span class="to-en">EN</span></button>
+<a class="evi-pill" id="eviPill" href="#cert" aria-label="Evidence collected"><span aria-hidden="true">🏅</span> <b id="eviCount">0</b>/8</a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="prog" id="prog" aria-hidden="true"><i></i></div>
+<button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuPanel"><span aria-hidden="true">☰</span> <span data-i18n="menu">Exhibits</span></button>
+<nav class="menu-panel" id="menuPanel" hidden aria-label="Exhibits"><ol id="menuList"></ol></nav>
+<button class="to-top" id="toTop" type="button" aria-label="Back to the top"><span aria-hidden="true">↑</span></button>
+
+<!-- 1. Court is in session -->
+<header class="hero sec" id="top">
+  <p class="court"><span data-i18n="court1">In the court of public health</span><span data-i18n="court2">Case no. 1885</span></p>
+  <h1 data-i18n="title">The People <i>v.</i> <em>E.&nbsp;coli</em></h1>
+  <p class="lede" data-i18n="lede">One species is on trial. <b class="g">Most of it is a friend.</b> <b class="r">A few strains are not.</b><br><strong>You are the judge.</strong></p>
+  <div class="hero-art"><!--ART:HERO--></div>
+  <div class="hero-links">
+    <a class="btn solid skip" href="#judge" data-i18n="skip">Skip to the trial →</a>
+    <a class="scroll" href="#size" data-i18n="scroll">Or scroll to enter the court <span aria-hidden="true">↓</span></a>
+    <a class="watch" href="trailer/"><span class="play" aria-hidden="true">▶</span><span data-i18n="watch">Watch the 43-second trailer</span></a>
+  </div>
+</header>
+
+<main>
+
+<!-- 2. How small? -->
+<section class="sec" id="size">
+  <p class="kicker" data-i18n="ex1">Exhibit 1</p>
+  <h2 data-i18n="sizeH">How small is the defendant?</h2>
+  <div class="zoom" data-level="0">
+    <div class="zoom-stage" aria-live="polite">
+      <div class="zl zl0"><svg viewBox="0 0 200 200" aria-hidden="true"><g fill="#1B1A17" stroke="#1B1A17" stroke-width="9" stroke-linejoin="round"><rect x="50" y="92" width="96" height="96" rx="30"/><rect x="52" y="36" width="22" height="80" rx="11"/><rect x="78" y="16" width="22" height="96" rx="11"/><rect x="104" y="12" width="22" height="100" rx="11"/><rect x="130" y="30" width="22" height="84" rx="11"/><rect x="146" y="88" width="24" height="64" rx="12" transform="rotate(38 158 120)"/></g><g fill="#F1D3BE"><rect x="50" y="92" width="96" height="96" rx="30"/><rect x="52" y="36" width="22" height="80" rx="11"/><rect x="78" y="16" width="22" height="96" rx="11"/><rect x="104" y="12" width="22" height="100" rx="11"/><rect x="130" y="30" width="22" height="84" rx="11"/><rect x="146" y="88" width="24" height="64" rx="12" transform="rotate(38 158 120)"/></g><path d="M74 100 v14 M100 96 v16 M126 96 v16" stroke="#C99A82" stroke-width="3" stroke-linecap="round"/><circle cx="115" cy="26" r="7" fill="none" stroke="#A61B29" stroke-width="3.5"/></svg></div>
+      <div class="zl zl1"><svg viewBox="0 0 200 200" aria-hidden="true"><g stroke="#1B1A17" stroke-width="3"><path d="M10 60 L60 40 L110 58 L100 110 L48 120 Z M110 58 L160 36 L196 70 L180 118 L100 110 M48 120 L100 110 L118 160 L70 190 L30 164 Z M100 110 L180 118 L176 170 L118 160" fill="#F4DCCB"/></g><g fill="#C98E78"><circle cx="62" cy="80" r="10"/><circle cx="148" cy="80" r="10"/><circle cx="76" cy="152" r="10"/><circle cx="146" cy="140" r="10"/></g><rect x="92" y="104" width="16" height="6" rx="3" fill="#0F6B5C"/></svg></div>
+      <div class="zl zl2"><!--ART:J3C--></div>
+    </div>
+    <div class="scalebar"><i></i><span class="sb-label">10 cm</span></div>
+    <p class="zoom-cap" id="zoomCap"></p>
+    <div class="btns"><button class="btn" id="zoomOut" disabled data-i18n="zoomOut">− Zoom out</button><button class="btn solid" id="zoomIn" data-i18n="zoomIn">Zoom in +</button></div>
+  </div>
+</section>
+
+<!-- 3. 20 minutes -->
+<section class="sec" id="twenty">
+  <p class="kicker" data-i18n="ex2">Exhibit 2</p>
+  <h2 data-i18n="simH">It copies itself every 20 minutes</h2>
+  <p data-i18n="simP">One cell splits into two. Then four, then eight. Press start and watch the clock.</p>
+  <div class="sim">
+    <canvas id="simCanvas" width="640" height="400" aria-label="Dividing cells"></canvas>
+    <div class="sim-read">
+      <div><span data-i18n="simTimeL">Time</span><b id="simTime">0 h 00 min</b></div>
+      <div><span data-i18n="simCellsL">Cells</span><b id="simCount">1</b></div>
+    </div>
+    <div class="btns">
+      <button class="btn solid" id="simStart">Start</button>
+      <button class="btn" id="simReset" data-i18n="reset">Reset</button>
+    </div>
+    <div class="btns jump">
+      <button class="chip" data-h="1" data-i18n="h1">After 1 h</button><button class="chip" data-h="5" data-i18n="h5">After 5 h</button><button class="chip" data-h="10" data-i18n="h10">After 10 h</button>
+    </div>
+    <p class="note" data-i18n="simNote">Only in ideal lab conditions. In your gut, food and space run out long before this.</p>
+  </div>
+</section>
+
+<!-- 4. Inside the cell -->
+<section class="sec" id="inside">
+  <p class="kicker" data-i18n="ex3">Exhibit 3</p>
+  <h2 data-i18n="insideH">Examine the defendant</h2>
+  <p data-i18n="insideP">Tap a number to inspect each part.</p>
+  <div class="anat-wrap"><!--ART:ANATOMY--></div>
+  <div class="part-card" id="partCard" aria-live="polite"></div>
+</section>
+
+<!-- 5. The hearing: friend / foe switch -->
+<section class="sec hearing" id="hearing">
+  <p class="kicker" data-i18n="hearK">The hearing</p>
+  <h2 data-i18n="hearH">Hear both sides</h2>
+  <div class="switch" role="tablist" aria-label="Choose a side">
+    <button role="tab" id="tabFriend" aria-selected="true" data-side="friend" data-i18n="tabF">Defence<small>Team Friend</small></button>
+    <button role="tab" id="tabFoe" aria-selected="false" data-side="foe" data-i18n="tabE">Prosecution<small>Team Foe</small></button>
+    <i class="knob" aria-hidden="true"></i>
+  </div>
+
+  <div class="side-panel" id="panelFriend" role="tabpanel" aria-labelledby="tabFriend">
+    <div class="witness"><div class="portrait frame"><!--ART:STAFF--></div>
+      <p data-i18n="wF"><span>Star witness</span><b><em>E. coli</em> K-12</b>Lab strain since 1922. Too tame to survive outside the lab.</p></div>
+    <article class="scene-card"><!--ART:INSULIN--><div data-i18n="sIns"><h3>“It makes my insulin.”</h3><p>In 1978 the human insulin gene was put into <em>E. coli</em> on a plasmid. Since 1982, insulin made this way has been a medicine.</p></div></article>
+    <article class="scene-card"><!--ART:VITK--><div data-i18n="sK"><h3>“It makes vitamin K2.”</h3><p>Gut <em>E. coli</em> produce vitamin K2 (menaquinone).</p></div></article>
+    <article class="scene-card"><!--ART:GUARD--><div data-i18n="sG"><h3>“It guards my gut.”</h3><p>By taking the space and food first, harmless strains make it hard for harmful bacteria to settle.</p></div></article>
+    <article class="scene-card plain"><div data-i18n="sGen"><h3>“It taught us genetics.”</h3><p>How DNA copies itself, how genes switch on and off, how bacteria swap genes: all first worked out in <em>E. coli</em>. Seven Nobel Prizes.</p></div></article>
+  </div>
+
+  <div class="side-panel" id="panelFoe" role="tabpanel" aria-labelledby="tabFoe" hidden>
+    <div class="witness wanted"><div class="portrait"><!--ART:MUGSHOT--></div>
+      <p data-i18n="wE"><span>Wanted</span><b><em>E. coli</em> O157:H7</b>Carries Shiga toxin. As few as 1–100 cells can make you ill.</p></div>
+    <article class="scene-card"><!--ART:TOXIN--><div data-i18n="sTox"><h3>Exhibit A: Shiga toxin</h3><p>It damages cells lining the gut and blood vessels. In some children it leads to kidney failure (HUS).</p></div></article>
+    <div class="gallery-h"><h3 data-i18n="lineup">The line-up</h3><p data-i18n="swipe">Swipe →</p></div>
+    <div class="gallery"><!--ART:GALLERY--></div>
+    <article class="scene-card"><!--ART:CHAIN--><div data-i18n="sChain"><h3>Exhibit B: how it reaches you</h3><p>Cattle carry O157:H7 without getting ill. It reaches people through undercooked minced meat, raw milk, unwashed produce, dirty water and unwashed hands.</p></div></article>
+    <article class="scene-card plain"><div data-i18n="sRes"><h3>Exhibit C: resisting treatment</h3><p>ESBL-producing and multidrug-resistant <em>E. coli</em> are a major global health problem: some of our most important antibiotics no longer work on them.</p></div></article>
+  </div>
+</section>
+
+<!-- Exhibit 4: build a foe -->
+<section class="sec" id="build">
+  <p class="kicker" data-i18n="ex4">Exhibit 4</p>
+  <h2 data-i18n="buildH">Build a foe</h2>
+  <p data-i18n="buildP">A friend does not turn bad on its own: it picks up new genes. Drag a gene onto the cell, or tap it.</p>
+  <div class="build-stage" id="buildStage"><!--ART:BUILD--></div>
+  <div class="build-result" id="buildResult" aria-live="polite"></div>
+  <div class="genes">
+    <button class="gene" type="button" data-gene="tox"><svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,3 30,8.5 30,19.5 20,25 10,19.5 10,8.5" fill="#F2B705" stroke="#1B1A17" stroke-width="2.5"/><path d="M20 25 V34 M20 31 l-8 6 M20 31 l8 6" stroke="#1B1A17" stroke-width="2.5" stroke-linecap="round"/><path d="M15 12 q5 -5 10 0" fill="none" stroke="#A61B29" stroke-width="3" stroke-linecap="round"/></svg><span data-i18n="gTox"><b>A virus</b>Shiga toxin gene</span></button>
+    <button class="gene" type="button" data-gene="stick"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="#2A5C9A" stroke-width="5"/><g stroke="#1B1A17" stroke-width="2.4" stroke-linecap="round"><path d="M20 4 v-3 M33 9 l2 -2 M36 20 h3 M33 31 l2 2 M20 36 v3 M7 31 l-2 2 M4 20 h-3 M7 9 l-2 -2"/></g></svg><span data-i18n="gStick"><b>A plasmid</b>sticky fimbriae genes</span></button>
+    <button class="gene" type="button" data-gene="res"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="none" stroke="#C9A03A" stroke-width="5"/><path d="M20 10 l8 3 v6 q0 7 -8 11 q-8 -4 -8 -11 v-6 z" fill="#fff" stroke="#1B1A17" stroke-width="2.2"/></svg><span data-i18n="gRes"><b>A plasmid</b>antibiotic-resistance gene</span></button>
+  </div>
+  <button class="btn wide" id="buildReset" type="button" data-i18n="buildReset">Start again with a friend</button>
+</section>
+
+<!-- 6. You are the judge -->
+<section class="sec" id="judge">
+  <p class="kicker" data-i18n="judgeK">Your turn</p>
+  <h2 data-i18n="judgeH">You are the judge</h2>
+  <p data-i18n="judgeP">Eight strains stand before you. Guilty of harming humans, or not guilty? Tap a verdict, or swipe the card.</p>
+  <div class="game" id="game">
+    <div class="deck" id="deck"></div>
+    <p class="feedback" id="feedback" aria-live="polite"></p>
+    <div class="btns verdict-btns">
+      <button class="btn guilty" id="bGuilty" data-i18n="bG">← Guilty</button>
+      <button class="btn innocent" id="bInnocent" data-i18n="bI">Not guilty →</button>
+    </div>
+    <button class="btn solid next" id="bNext" hidden>Next strain</button>
+    <div class="result" id="result" hidden>
+      <div class="stamp-wrap"><!--ART:STAMP--></div>
+      <p class="score" id="score" dir="ltr"></p>
+      <p id="scoreLine"></p>
+      <div class="btns"><button class="btn solid" id="bShare" data-i18n="share">Share my score</button><button class="btn" id="bAgain" data-i18n="again">Judge again</button></div>
+    </div>
+  </div>
+  <template id="cardData">
+    <div data-name="K-12" data-guilty="0"
+      data-tag="The lab legend" data-why="Not guilty. A tame lab strain: it made the first human insulin in bacteria."
+      data-tag-ar="أسطورة المختبر" data-why-ar="بريئة. سلالة مختبر أليفة، ومنها صُنع أول إنسولين بشري في البكتيريا."><div class="n"><!--ART:J0N--></div><div class="c"><!--ART:J0C--></div></div>
+    <div data-name="O157:H7" data-guilty="1"
+      data-tag="The outbreak strain" data-why="Guilty. It carries Shiga toxin and can cause kidney failure."
+      data-tag-ar="سلالة التفشّي" data-why-ar="مذنبة. تحمل سم شيغا، وقد تسبب فشلاً كلوياً."><div class="n"><!--ART:J4N--></div><div class="c"><!--ART:J4C--></div></div>
+    <div data-name="Nissle 1917" data-guilty="0"
+      data-tag="The probiotic" data-why="Not guilty. It is sold as a probiotic and out-competes harmful bacteria."
+      data-tag-ar="البروبيوتيك" data-why-ar="بريئة. تُباع كبروبيوتيك، وتتغلب على البكتيريا الضارة."><div class="n"><!--ART:J2N--></div><div class="c"><!--ART:J2C--></div></div>
+    <div data-name="UPEC" data-guilty="1"
+      data-tag="The climber" data-why="Guilty. It is the most common cause of urinary tract infections."
+      data-tag-ar="المتسلّقة" data-why-ar="مذنبة. تسبب أغلب التهابات المسالك البولية."><div class="n"><!--ART:J6N--></div><div class="c"><!--ART:J6C--></div></div>
+    <div data-name="BL21" data-guilty="0"
+      data-tag="The protein factory" data-why="Not guilty. A lab workhorse that mass-produces enzymes and research proteins."
+      data-tag-ar="مصنع البروتين" data-why-ar="بريئة. سلالة مختبر تنتج الإنزيمات وبروتينات البحث بكميات كبيرة."><div class="n"><!--ART:J1N--></div><div class="c"><!--ART:J1C--></div></div>
+    <div data-name="ETEC" data-guilty="1"
+      data-tag="The traveller’s curse" data-why="Guilty. Its two toxins cause traveller’s diarrhoea."
+      data-tag-ar="لعنة المسافر" data-why-ar="مذنبة. سمّاها يسببان إسهال المسافرين."><div class="n"><!--ART:J5N--></div><div class="c"><!--ART:J5C--></div></div>
+    <div data-name="Commensal" data-guilty="0"
+      data-tag="The quiet tenant" data-why="Not guilty. It lives in nearly everyone’s gut and makes vitamin K2."
+      data-tag-ar="الساكن الهادئ" data-why-ar="بريئة. تعيش في أمعاء كل الناس تقريباً، وتصنع فيتامين K2."><div class="n"><!--ART:J3N--></div><div class="c"><!--ART:J3C--></div></div>
+    <div data-name="NMEC K1" data-guilty="1"
+      data-tag="The cloaked one" data-why="Guilty. Its K1 capsule hides it, and it can cause meningitis in newborns."
+      data-tag-ar="المتخفّية" data-why-ar="مذنبة. محفظتها K1 تخفيها، وقد تسبب التهاب السحايا عند حديثي الولادة."><div class="n"><!--ART:J7N--></div><div class="c"><!--ART:J7C--></div></div>
+  </template>
+</section>
+
+<!-- Exhibit 5: under the microscope -->
+<section class="sec" id="attack">
+  <p class="kicker" data-i18n="ex5">Exhibit 5</p>
+  <h2 data-i18n="attackH">Under the microscope: the attack</h2>
+  <p data-i18n="attackP">Zoom into the wall of the large intestine and watch, step by step, how O157:H7 grabs a healthy cell, spreads along the gut, and sends its toxin into the blood.</p>
+  <div class="attack-stage" id="attackStage" data-step="0"><!--ART:ATTACK--></div>
+  <div class="attack-dots" id="attackDots" role="tablist"></div>
+  <div class="attack-card" id="attackCard" aria-live="polite"></div>
+  <div class="attack-btns">
+    <button class="btn" id="attackPrev" type="button" aria-label="Back">◀</button>
+    <button class="btn" id="attackPlay" type="button"></button>
+    <button class="btn solid" id="attackNext" type="button"></button>
+  </div>
+</section>
+
+<!-- 7. Stay safe -->
+<section class="sec" id="safe">
+  <p class="kicker" data-i18n="ordK">The court orders</p>
+  <h2 data-i18n="ordH">Keep Team Foe out</h2>
+  <div class="cook">
+    <p class="cook-h" data-i18n="cookH"><b>Test order 2:</b> cook the burger. Slide to heat it.</p>
+    <div class="cook-art"><!--ART:BURGER--><span class="cook-read" id="cookRead" dir="ltr">20 °C</span></div>
+    <input type="range" id="cookTemp" min="20" max="80" step="1" value="20" aria-label="Cooking temperature">
+    <div class="cook-scale" dir="ltr"><span>20 °C</span><span class="mark">▲ 71 °C</span></div>
+    <p class="cook-msg" id="cookMsg" aria-live="polite"></p>
+  </div>
+  <ul class="orders">
+    <li style="--i:0"><span class="ic"><!--ART:I_HANDS--></span><span class="tx" data-i18n="o1"><b>Wash your hands</b>after the toilet and before food</span></li>
+    <li style="--i:1"><span class="ic"><!--ART:I_COOK--></span><span class="tx" data-i18n="o2"><b>Cook mince to 71&nbsp;°C</b>no pink in the middle</span></li>
+    <li style="--i:2"><span class="ic"><!--ART:I_WASH--></span><span class="tx" data-i18n="o3"><b>Wash raw produce</b>fruit, salad and vegetables</span></li>
+    <li style="--i:3"><span class="ic"><!--ART:I_WATER--></span><span class="tx" data-i18n="o4"><b>Safe water, pasteurised milk</b>no raw milk</span></li>
+    <li style="--i:4"><span class="ic"><!--ART:I_SEPARATE--></span><span class="tx" data-i18n="o5"><b>Keep raw and cooked apart</b>separate boards and plates</span></li>
+  </ul>
+</section>
+
+<!-- 8. Verdict and credits -->
+<section class="sec verdict" id="verdict">
+  <div class="scales"><!--ART:SCALES--></div>
+  <p class="kicker" data-i18n="vK">Verdict</p>
+  <p class="vbig" data-i18n="vBig">It depends on<br><b>the strain.</b></p>
+  <p data-i18n="vSub">A few strains: <b class="r">guilty.</b> The species: <b class="g">not guilty.</b></p>
+</section>
+
+<!-- Certificate -->
+<section class="sec cert" id="cert">
+  <p class="kicker" data-i18n="certK">Your certificate</p>
+  <h2 data-i18n="certH">Collect all 8 pieces of evidence</h2>
+  <p data-i18n="certP">Every exhibit you complete adds a piece of evidence. Collect all eight and the court gives you a certificate to save.</p>
+  <ul class="evi-grid" id="eviGrid"></ul>
+  <div class="cert-form">
+    <label for="certName" data-i18n="certName">Your name (it stays on your phone)</label>
+    <input id="certName" type="text" maxlength="40" autocomplete="off" placeholder="Name">
+    <button class="btn solid wide" id="certSave" type="button" disabled data-i18n="certSave">Save my certificate</button>
+    <p class="note" id="certNote"></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="sec credits">
+  <h2 data-i18n="credH">Clerks of the court</h2>
+  <p data-i18n="credP"><b>[Student name(s)]</b><br>[Department] · [College] · [University]<br>Supervisor: [Supervisor name]<br>[Festival name · Year]</p>
+  <details class="srcs"><summary><span data-i18n="srcH">Sources</span> <b dir="ltr">(22)</b></summary>
+  <ol class="refs" dir="ltr">
+    <li>Escherich T. Fortschr Med 1885;3:515–22.</li>
+    <li>Bachmann BJ. Bacteriol Rev 1972;36:525–57.</li>
+    <li>Meselson M, Stahl FW. PNAS 1958;44:671–82.</li>
+    <li>Goeddel DV et al. PNAS 1979;76:106–10.</li>
+    <li>Riley LW et al. N Engl J Med 1983;308:681–5.</li>
+    <li>Blattner FR et al. Science 1997;277:1453–62.</li>
+    <li>Kaper JB, Nataro JP, Mobley HL. Nat Rev Microbiol 2004;2:123–40.</li>
+    <li>Tenaillon O et al. Nat Rev Microbiol 2010;8:207–17.</li>
+    <li>Flores-Mireles AL et al. Nat Rev Microbiol 2015;13:269–84.</li>
+    <li>Croxen MA et al. Clin Microbiol Rev 2013;26:822–80.</li>
+    <li>Campellone KG. <i>FEBS J</i> 2010;277:2390–402.</li>
+    <li>Joseph A et al. <i>Toxins</i> 2020;12:67.</li>
+    <li>Freedman SB, van de Kar NCAJ, Tarr PI. <i>N Engl J Med</i> 2023;389:1402–14.</li>
+    <li>Teunis P, Takumi K, Shinagawa K. <i>Risk Anal</i> 2004;24:401–7.</li>
+    <li>Wong CS et al. <i>Clin Infect Dis</i> 2012;55:33–41.</li>
+    <li>Bittinger K et al. <i>Nat Microbiol</i> 2020;5:838–47.</li>
+    <li>FDA. Bad Bug Book, 2nd ed., 2012.</li>
+    <li>WHO. Global Antibiotic Resistance Surveillance Report, 2025.</li>
+    <li>WHO. Guidelines for Drinking-water Quality, 4th ed.</li>
+    <li>CDC. <i>E. coli</i> (Escherichia coli): STEC.</li>
+    <li>USDA FSIS. Safe minimum internal temperatures.</li>
+    <li>NobelPrize.org.</li>
+  </ol></details>
+  <p class="fine" data-i18n="fine">All illustrations are original; cells are not drawn to scale. For education, not medical advice. This site collects no data about you.</p>
+  <a class="scroll" href="#top" data-i18n="top">Back to the top ↑</a>
+</footer>
+
+<script src="js/i18n.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/play.js" defer></script>
+</body>
+</html>
