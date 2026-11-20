@@ -1,4 +1,4 @@
-/* Hands-on exhibits: build a foe, scrub for 20 s, cook the burger, and the certificate. Texts: js/i18n.js (.play). */
+/* Hands-on exhibits: build a foe, grow and stain it, scrub for 20 s, cook the burger, and the certificate. Texts: js/i18n.js (.play). */
 (() => {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -86,22 +86,24 @@
     paint();
   })();
 
-  /* ================= Exhibit 5: under the microscope ================= */
-  (() => {
-    const stage = $("#attackStage"), card = $("#attackCard"), dots = $("#attackDots");
-    const bPrev = $("#attackPrev"), bNext = $("#attackNext"), bPlay = $("#attackPlay");
+  /* ================= one step player, shared by the attack and the Gram stain ================= */
+  // ids: <id>Stage, <id>Card, <id>Dots, <id>Prev, <id>Play, <id>Next. steps() gives [title, text] pairs,
+  // cardClass(step) the card's colour, extra(step) html after the text, onStep(step) runs after every paint.
+  function stepper(id, { steps, cardClass = () => "", extra = () => "", onStep = () => {} }) {
+    const stage = $(`#${id}Stage`), card = $(`#${id}Card`), dots = $(`#${id}Dots`);
+    const bPrev = $(`#${id}Prev`), bNext = $(`#${id}Next`), bPlay = $(`#${id}Play`);
     let step = 0, timer = null;
-    const N = () => P().attack.steps.length;
+    const N = () => steps().length;
     function paint() {
-      const a = P().attack, [t, d] = a.steps[step];
+      const a = P().attack, [t, d] = steps()[step];
       stage.dataset.step = step;
-      card.className = `attack-card${step >= 5 ? " bad" : step === 0 ? " ok" : ""}`;
-      card.innerHTML = `<span class="step-n">${a.stepOf(step + 1, N())}</span><h3>${t}</h3><p>${d}</p>`;
-      dots.innerHTML = a.steps.map((s, i) => `<button type="button" role="tab" aria-selected="${i === step}" aria-label="${s[0]}" data-i="${i}"></button>`).join("");
+      card.className = `attack-card${cardClass(step)}`;
+      card.innerHTML = `<span class="step-n">${a.stepOf(step + 1, N())}</span><h3>${t}</h3><p>${d}</p>${extra(step)}`;
+      dots.innerHTML = steps().map((s, i) => `<button type="button" role="tab" aria-selected="${i === step}" aria-label="${s[0]}" data-i="${i}"></button>`).join("");
       bPrev.disabled = step === 0;
       bNext.textContent = step === N() - 1 ? a.again : a.next;
       bPlay.textContent = timer ? a.pause : a.play;
-      if (step === N() - 1) award("attack");
+      onStep(step);
     }
     const go = (i) => { step = (i + N()) % N(); paint(); };
     const stop = () => { clearInterval(timer); timer = null; paint(); };
@@ -118,7 +120,65 @@
     new IntersectionObserver(([e]) => { if (!e.isIntersecting && timer) stop(); }, { threshold: .1 }).observe(stage);
     refreshers.push(paint);
     paint();
+    return { go, stop };
+  }
+
+  /* ================= Exhibit 5: grow it on a plate ================= */
+  (() => {
+    const plate = $("#plate"), hours = $("#cultHours"), out = $("#plateCard");
+    const pick = (attr, v) => {
+      plate.dataset[attr] = v;
+      $$(`#plate [data-${attr}]`).forEach((b) => b.setAttribute("aria-pressed", b.dataset[attr] === v));
+      paint();
+    };
+    function paint() {
+      const h = +hours.value, c = P().culture, m = plate.dataset.medium, s = plate.dataset.strain;
+      plate.style.setProperty("--g", Math.max(0, Math.min(1, (h - 6) / 14)));   // visible from ~8 h, full size by 20 h
+      hours.style.setProperty("--p", `${h / 24 * 100}%`);
+      $("#plateRead").textContent = c.read(h);
+      const key = m === "smac" ? `smac_${s}` : m;
+      const [t, d] = h < 8 ? c.early : h < 16 ? c.growing : c[key];
+      const caught = h >= 16 && key === "smac_o157";
+      out.className = `plate-card${caught ? " caught" : ""}`;
+      out.innerHTML = `<b>${t}</b><span>${d}</span>`;
+      if (caught) award("culture");
+    }
+    $$("#plate button[data-medium]").forEach((b) => b.addEventListener("click", () => pick("medium", b.dataset.medium)));
+    $$("#plate button[data-strain]").forEach((b) => b.addEventListener("click", () => pick("strain", b.dataset.strain)));
+    hours.addEventListener("input", paint);
+    refreshers.push(paint);
+    paint();
   })();
+
+  /* ================= Exhibit 6: Gram stain ================= */
+  (() => {
+    const stage = $("#stainStage"), oops = $("#stainOops");
+    const err = () => stage.dataset.err === "1";
+    let last = 0;
+    const steps = () => { const t = P().stain; return t.steps.map((s, i) => (err() && t.wrong[i]) || s); };
+    const st = stepper("stain", {
+      steps,
+      cardClass: (i) => (err() && i >= 3 ? " bad" : !err() && i === 4 ? " ok" : ""),
+      extra: (i) => (i === 4 && !err() ? `<a class="go-attack" href="#act5">${P().stain.link}</a>` : ""),
+      onStep: (i) => {
+        oops.textContent = err() ? P().stain.fix : P().stain.oops;
+        if (i === 4 && !err()) award("stain");
+        if (i !== last) { last = i; stage.classList.remove("washing"); void stage.offsetWidth; stage.classList.add("washing"); }
+      },
+    });
+    oops.addEventListener("click", () => {
+      const was = err();
+      stage.dataset.err = was ? "0" : "1";
+      st.stop(); st.go(was ? 0 : 3);
+    });
+  })();
+
+  /* ================= Exhibit 7: under the microscope ================= */
+  stepper("attack", {
+    steps: () => P().attack.steps,
+    cardClass: (i) => (i >= 5 ? " bad" : i === 0 ? " ok" : ""),
+    onStep: (i) => { if (i === P().attack.steps.length - 1) award("attack"); },
+  });
 
   /* ================= Order 2: cook the burger ================= */
   (() => {

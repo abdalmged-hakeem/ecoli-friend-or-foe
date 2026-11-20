@@ -11,8 +11,8 @@
   let refreshMenu = () => {};
   const load = (k) => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 
-  /* ---------- evidence: 8 badges, kept on this phone only ---------- */
-  const EVI = ["zoom", "sim", "parts", "sides", "build", "judge", "attack", "cook"];
+  /* ---------- evidence: 10 badges, kept on this phone only ---------- */
+  const EVI = ["zoom", "sim", "parts", "sides", "build", "attack", "culture", "stain", "judge", "cook"];
   const evidence = (() => {
     let got = [];
     try { got = JSON.parse(load("evidence") || "[]").filter((k) => EVI.includes(k)); } catch (_) { got = []; }
@@ -25,6 +25,11 @@
       $("#certSave").disabled = got.length < EVI.length;
       $("#certNote").textContent = got.length < EVI.length ? L.left(EVI.length - got.length) : L.ready;
       $("#eviPill").classList.toggle("full", got.length === EVI.length);
+      for (const el of $$(".takeaway")) {
+        const on = got.includes(el.dataset.k);
+        el.classList.toggle("on", on);
+        el.innerHTML = on ? `<span class="tk-stamp" aria-hidden="true">${L.icons[EVI.indexOf(el.dataset.k)]}</span><span>${L.take[EVI.indexOf(el.dataset.k)]}</span>` : "";
+      }
     }
     function award(k) {
       if (got.includes(k)) return;
@@ -256,6 +261,20 @@
     } catch (_) { /* user cancelled */ }
   });
 
+  /* ---------- the first vote, remembered at the verdict ---------- */
+  const poll = (() => {
+    const done = $("#pollDone"), back = $("#voteBack");
+    function paint() {
+      const v = load("firstVote"), V = T().vote;
+      $$("#poll [data-vote]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.vote === v));
+      done.textContent = v ? V.done : "";
+      back.hidden = !v;
+      back.innerHTML = v ? V.back[v] : "";
+    }
+    $$("#poll [data-vote]").forEach((b) => b.addEventListener("click", () => { store("firstVote", b.dataset.vote); paint(); }));
+    return { paint };
+  })();
+
   /* ---------- language switch ---------- */
   function applyLang() {
     root.lang = lang;
@@ -272,6 +291,7 @@
     sim.refresh();
     if (finished) paintResult(); else if (current) paintCard();
     evidence.paint();
+    poll.paint();
     refreshMenu();
     document.dispatchEvent(new CustomEvent("langchange", { detail: lang }));
   }
@@ -285,7 +305,7 @@
 
   /* ---------- gentle one-shot reveals as sections come into view ---------- */
   if (!reduce) {
-    const SEL = ".sec > .kicker, .sec > h2, .sec > p, .pcard, .labsteps article, .gene, .evi-grid li, .sim, .zoom, .anat-wrap, .build-stage, .attack-stage, .cert-form, .deck";
+    const SEL = ".sec > .kicker, .sec > h2, .sec > p, .pcard, .labsteps article, .gene, .evi-grid li, .sim, .zoom, .anat-wrap, .build-stage, .attack-stage, .plate-art, .cert-form, .deck, .act > :not(.act-n)";
     // anything inside a panel that starts hidden is skipped: it has its own entrance
     const els = $$(SEL).filter((el) => !el.closest(".side-panel"));
     const byParent = new Map();
@@ -310,11 +330,12 @@
   }
 
   /* ---------- progress bar, exhibits menu, back to the top ---------- */
-  const SEC_BADGE = { size: "zoom", twenty: "sim", inside: "parts", hearing: "sides", build: "build", judge: "judge", attack: "attack", safe: "cook" };
+  const SEC_BADGE = { size: "zoom", twenty: "sim", inside: "parts", hearing: "sides", build: "build", culture: "culture", stain: "stain", judge: "judge", attack: "attack", safe: "cook" };
   const menuBtn = $("#menuBtn"), menuPanel = $("#menuPanel"), menuList = $("#menuList"), toTop = $("#toTop"), progFill = $("#prog i");
 
   function buildMenu() {
-    menuList.innerHTML = $$("main .sec[id], footer.sec").map((s) => {
+    menuList.innerHTML = $$("main > .act, main > .sec[id], footer.sec").map((s) => {
+      if (s.classList.contains("act")) return `<li class="m-act"><a href="#${s.id}">${$(".act-k", s).textContent}: ${$("h2", s).textContent}</a></li>`;
       const h = s.querySelector("h2");
       if (!h) return "";
       const k = SEC_BADGE[s.id];
