@@ -1,4 +1,4 @@
-/* Hands-on exhibits: build a foe, grow and stain it, scrub for 20 s, cook the burger, and the certificate. Texts: js/i18n.js (.play). */
+/* Hands-on exhibits: build a foe, watch the attack, grow and stain it, cook the burger, and the certificate. Texts: js/i18n.js (.play). */
 (() => {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -17,10 +17,17 @@
       for (const g of ["tox", "stick", "res"]) stage.classList.toggle(`has-${g}`, genes.has(g));
       stage.classList.toggle("is-foe", genes.has("tox") || genes.has("stick"));
       stage.classList.toggle("is-warn", genes.has("res") && !genes.has("tox") && !genes.has("stick"));
-      $$(".gene").forEach((b) => b.classList.toggle("used", genes.has(b.dataset.gene)));
       const t = P().build;
+      $$(".gene").forEach((b) => {
+        const on = genes.has(b.dataset.gene);
+        b.classList.toggle("used", on);
+        b.setAttribute("aria-pressed", on);
+        b.dataset.added = P().added;
+      });
+      $("#buildReset").hidden = genes.size === 0;
       let title, cls;
-      if (genes.has("tox") && genes.has("stick")) { title = t.both; cls = "bad"; }
+      if (genes.has("tox") && genes.has("stick") && genes.has("res")) { title = t.all; cls = "bad"; }
+      else if (genes.has("tox") && genes.has("stick")) { title = t.both; cls = "bad"; }
       else if (genes.has("tox")) { title = t.tox; cls = "bad"; }
       else if (genes.has("stick")) { title = t.stick; cls = "bad"; }
       else if (genes.has("res")) { title = t.res; cls = "warn"; }
@@ -199,7 +206,11 @@
       $("#cookRead").textContent = `${t} °C`;
       $("#cookRead").classList.toggle("safe", t >= 71);
       const m = $("#cookMsg");
-      if (t >= 71) { m.className = "cook-msg safe"; m.innerHTML = c.safe; award("cook"); }
+      if (t >= 71) {
+        award("cook");
+        const all = window.evidence && window.evidence.all();
+        m.className = "cook-msg safe"; m.innerHTML = `${c.safe} <a class="go-attack" href="#verdict">${all ? c.toVerdictAll : c.toVerdict}</a>`;
+      }
       else if (t >= 50) { m.className = "cook-msg warn"; m.innerHTML = c.warm; }
       else { m.className = "cook-msg"; m.innerHTML = c.raw; }
       input.style.setProperty("--p", `${(t - 20) / 60 * 100}%`);
@@ -216,13 +227,15 @@
     name.addEventListener("input", () => { try { localStorage.setItem("certName", name.value); } catch (_) { /* ignore */ } });
     const ph = () => { name.placeholder = P().cert.ph; };
     refreshers.push(ph); ph();
-    btn.addEventListener("click", async () => {
+    // draws the certificate onto any 1600 x 1130 canvas: the on-page preview and the saved image are the same picture
+    async function draw(cv) {
       const c = P().cert, ar = document.documentElement.lang === "ar";
-      const W = 1600, H = 1130, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      const W = 1600, H = 1130;
       const x = cv.getContext("2d");
       const serif = ar ? '"Geeza Pro", "Noto Naskh Arabic", serif' : 'Fraunces, Georgia, serif';
       const sans = ar ? '"Geeza Pro", "Noto Sans Arabic", system-ui, sans-serif' : 'system-ui, -apple-system, sans-serif';
       if (document.fonts) await document.fonts.ready;
+      x.clearRect(0, 0, W, H);
       x.fillStyle = "#F2ECDD"; x.fillRect(0, 0, W, H);
       x.strokeStyle = "#1B1A17"; x.lineWidth = 10; x.strokeRect(40, 40, W - 80, H - 80);
       x.lineWidth = 3; x.strokeRect(62, 62, W - 124, H - 124);
@@ -231,11 +244,16 @@
       x.font = `600 112px ${serif}`; x.fillText(c.title, W / 2, 300);
       x.fillStyle = "#B8892B"; x.fillRect(W / 2 - 160, 340, 320, 6);
       x.fillStyle = "#1B1A17"; x.font = `400 40px ${sans}`; x.fillText(c.certifies, W / 2, 430);
-      x.font = `italic 700 92px ${serif}`; x.fillStyle = "#A61B29";
-      x.fillText(name.value.trim() || c.anon, W / 2, 550);
+      // the name shrinks until it fits inside the frame, however long it is
+      const who = name.value.trim() || c.anon;
+      let size = 92;
+      const slant = ar ? "" : "italic ";
+      do { x.font = `${slant}700 ${size}px ${serif}`; size -= 4; } while (x.measureText(who).width > 1340 && size >= 40);
+      x.fillStyle = "#A61B29";
+      x.fillText(who, W / 2, 550, 1340);
       x.fillStyle = "#1B1A17"; x.font = `400 38px ${sans}`;
-      c.body.forEach((l, i) => x.fillText(l, W / 2, 650 + i * 56));
-      x.font = `600 64px ${serif}`; x.fillText(c.verdict, W / 2, 860);
+      c.body.forEach((l, i) => x.fillText(l, W / 2, 650 + i * 56, 1340));
+      x.font = `600 64px ${serif}`; x.fillText(c.verdict, W / 2, 860, 1340);
       x.font = `${ar ? "" : "italic "}500 34px ${serif}`; x.fillStyle = "#0F6B5C";
       x.fillText(c.thanks, W / 2, 935, 780);           // kept narrow so it never runs under the stamp
       x.font = `400 28px ${sans}`; x.fillStyle = "#6A655A";
@@ -244,15 +262,48 @@
       const st = $(".stamp-wrap svg");
       if (st) {
         const s = st.cloneNode(true); s.setAttribute("width", "260"); s.setAttribute("height", "260");
-        s.querySelectorAll("*").forEach((n) => { if (n.getAttribute("stroke")) n.setAttribute("stroke", "#A61B29"); if (n.tagName === "text") { n.setAttribute("fill", "#A61B29"); n.setAttribute("font-family", "monospace"); n.setAttribute("font-weight", "800"); n.setAttribute("font-size", n.classList.contains("small") ? "6.4" : "9.6"); } });
+        const W4 = window.I18N[ar ? "ar" : "en"].stamps.cert;
+        s.querySelectorAll("text").forEach((n, i) => { n.textContent = W4[i]; });   // the certificate carries the verdict
+        s.querySelectorAll("*").forEach((n) => { if (n.getAttribute("stroke")) n.setAttribute("stroke", "#A61B29"); if (n.tagName === "text") { n.setAttribute("fill", "#A61B29"); n.setAttribute("font-family", ar ? "Geeza Pro, Noto Sans Arabic, sans-serif" : "monospace"); n.setAttribute("font-weight", "800"); n.setAttribute("font-size", n.classList.contains("small") ? "6.4" : "9.6"); } });
         const im = new Image();
         await new Promise((ok) => { im.onload = ok; im.onerror = ok; im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(s)); });
         try { x.drawImage(im, W - 380, H - 380, 260, 260); } catch (_) { /* skip stamp */ }
       }
+      return cv;
+    }
+    // the preview appears once all ten pieces are in, and follows the name as it is typed
+    const wrap = $("#certPreviewWrap"), preview = $("#certPreview"), saved = $("#certSaved");
+    let pt = 0;
+    const refreshPreview = () => {
+      clearTimeout(pt);
+      pt = setTimeout(() => {
+        const all = window.evidence && window.evidence.all();
+        wrap.hidden = !all;
+        if (all) draw(preview);
+      }, 120);
+    };
+    name.addEventListener("input", () => { saved.textContent = ""; savedKind = ""; refreshPreview(); });
+    document.addEventListener("evidencechange", refreshPreview);
+    refreshers.push(refreshPreview);
+    let savedKind = "";
+    refreshers.push(() => { if (savedKind) saved.textContent = P().cert[savedKind]; });
+    refreshPreview();
+    btn.addEventListener("click", async () => {
+      const c = P().cert;
+      const cv = document.createElement("canvas"); cv.width = 1600; cv.height = 1130;
+      await draw(cv);
+      const fileName = "e-coli-judge-certificate.png";
+      const blob = await new Promise((ok) => cv.toBlob(ok, "image/png"));
+      const file = blob && typeof File === "function" ? new File([blob], fileName, { type: "image/png" }) : null;
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: c.shareTitle }); saved.textContent = c.shared; savedKind = "shared"; return; } catch (e) { if (e && e.name === "AbortError") return; }
+      }
       const a = document.createElement("a");
-      a.download = "e-coli-judge-certificate.png";
-      a.href = cv.toDataURL("image/png");
+      a.download = fileName;
+      a.href = blob ? URL.createObjectURL(blob) : cv.toDataURL("image/png");
       document.body.appendChild(a); a.click(); a.remove();
+      if (blob) setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      saved.textContent = c.downloaded; savedKind = "downloaded";
     });
   })();
 })();

@@ -14,8 +14,13 @@
 <body data-side="friend">
 
 <button class="lang" id="langBtn" type="button" aria-label="Change language"><span class="to-ar">عربي</span><span class="to-en">EN</span></button>
-<a class="evi-pill" id="eviPill" href="#cert" aria-label="Evidence collected"><span aria-hidden="true">🏅</span> <b id="eviCount">0</b>/10</a>
+<a class="evi-pill" id="eviPill" href="#cert" aria-label="Evidence collected"><svg class="tag-ic" viewBox="0 0 26 16" aria-hidden="true"><path d="M7 1.5h16.5v13H7L1.5 8z" fill="#E9D9A6" stroke="#1B1A17" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="8" r="1.8" fill="#1B1A17"/></svg> <b id="eviCount">0</b>/10</a>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="all-in" id="allIn" role="dialog" aria-labelledby="allInH" hidden>
+  <p class="all-in-h" id="allInH" data-i18n="allInH">All ten pieces of evidence are in.</p>
+  <p data-i18n="allInP">The court has everything it needs. Your certificate is ready.</p>
+  <div class="btns"><a class="btn solid claim-go" href="#cert" id="allInGo" data-i18n="allInGo">Claim my certificate</a><button class="btn" type="button" id="allInClose" data-i18n="allInClose">Later</button></div>
+</div>
 <div class="prog" id="prog" aria-hidden="true"><i></i></div>
 <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuPanel"><span aria-hidden="true">☰</span> <span data-i18n="menu">Exhibits</span></button>
 <nav class="menu-panel" id="menuPanel" hidden aria-label="Exhibits"><ol id="menuList"></ol></nav>
@@ -36,11 +41,11 @@
     </div>
     <p class="poll-done" id="pollDone" aria-live="polite"></p>
   </div>
-  <p class="howto" data-i18n="howto">Finish an exhibit to win a piece of evidence 🏅. Collect all 10 and the court gives you a certificate.</p>
-  <div class="hero-links">
-    <a class="btn solid skip" href="#judge" data-i18n="skip">Skip to the trial →</a>
-    <a class="scroll" href="#act1" data-i18n="scroll">Or scroll to enter the court <span aria-hidden="true">↓</span></a>
+  <div class="routes" role="group" aria-label="Choose your route">
+    <a class="btn solid route" href="#judge" data-i18n="skip">Quick trial →<small>Judge + verdict · 2 min</small></a>
+    <a class="btn route" href="#act1" data-i18n="scroll">Full hearing ↓<small>Earns the certificate</small></a>
   </div>
+  <p class="howto" data-i18n="howto">Finish an exhibit to win a piece of evidence <svg class="tag-ic" viewBox="0 0 26 16" aria-hidden="true"><path d="M7 1.5h16.5v13H7L1.5 8z" fill="#E9D9A6" stroke="#1B1A17" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="8" r="1.8" fill="#1B1A17"/></svg>. Collect all 10 and the court gives you a certificate.</p>
 </header>
 
 <main>
@@ -98,7 +103,7 @@
 <section class="sec" id="inside">
   <p class="kicker" data-i18n="ex3">Exhibit 3</p>
   <h2 data-i18n="insideH">Examine the defendant</h2>
-  <p data-i18n="insideP">Tap a number to inspect each part.</p>
+  <p data-i18n="insideP">Tap all 6 numbers. Inspect every part to collect this evidence.</p>
   <div class="anat-wrap"><!--ART:ANATOMY--></div>
   <div class="part-card" id="partCard" aria-live="polite"></div>
   <p class="takeaway" data-k="parts" aria-live="polite"></p>
@@ -115,7 +120,7 @@
 
 <!-- 5. The hearing: friend / foe switch -->
 <section class="sec hearing" id="hearing">
-  <p class="kicker" data-i18n="hearK">The hearing</p>
+  <p class="kicker" data-i18n="ex4">Exhibit 4</p>
   <h2 data-i18n="hearH">Hear both sides</h2>
   <div class="switch" role="tablist" aria-label="Choose a side">
     <button role="tab" id="tabFriend" aria-selected="true" data-side="friend" data-i18n="tabF">Defence<small>Team Friend</small></button>
@@ -130,16 +135,19 @@
     <article class="scene-card"><!--ART:VITK--><div data-i18n="sK"><h3>“It makes vitamin K2.”</h3><p>Gut <em>E. coli</em> produce vitamin K2 (menaquinone).</p></div></article>
     <article class="scene-card"><!--ART:GUARD--><div data-i18n="sG"><h3>“It guards my gut.”</h3><p>By taking the space and food first, harmless strains make it hard for harmful bacteria to settle.</p></div></article>
     <article class="scene-card plain"><div data-i18n="sGen"><h3>“It taught us genetics.”</h3><p>How DNA copies itself, how genes switch on and off, how bacteria swap genes: all first worked out in <em>E. coli</em>. Seven Nobel Prizes.</p></div></article>
+    <button class="btn solid wide hand-over" type="button" data-go="foe" data-i18n="toFoe">The prosecution calls its witnesses →</button>
   </div>
 
   <div class="side-panel" id="panelFoe" role="tabpanel" aria-labelledby="tabFoe" hidden>
     <div class="witness wanted"><div class="portrait"><!--ART:MUGSHOT--></div>
       <p data-i18n="wE"><span>Wanted</span><b><em>E. coli</em> O157:H7</b>Carries Shiga toxin. As few as 1–100 cells can make you ill.</p></div>
-    <article class="scene-card"><!--ART:TOXIN--><div data-i18n="sTox"><h3>Exhibit A: Shiga toxin</h3><p>It damages cells lining the gut and blood vessels. In some children it leads to kidney failure (HUS).</p></div></article>
+    <article class="scene-card"><!--ART:TOXIN--><div data-i18n="sTox"><h3>Count 1: Shiga toxin</h3><p>It damages cells lining the gut and blood vessels. In some children it leads to kidney failure (HUS).</p></div></article>
     <div class="gallery-h"><h3 data-i18n="lineup">The line-up</h3><p data-i18n="swipe">Swipe →</p></div>
     <div class="gallery"><!--ART:GALLERY--></div>
-    <article class="scene-card"><!--ART:CHAIN--><div data-i18n="sChain"><h3>Exhibit B: how it reaches you</h3><p>Cattle carry O157:H7 without getting ill. It reaches people through undercooked minced meat, raw milk, unwashed produce, dirty water and unwashed hands.</p></div></article>
-    <article class="scene-card plain"><div data-i18n="sRes"><h3>Exhibit C: resisting treatment</h3><p>ESBL-producing and multidrug-resistant <em>E. coli</em> are a major global health problem: some of our most important antibiotics no longer work on them.</p></div></article>
+    <article class="scene-card"><!--ART:CHAIN--><div data-i18n="sChain"><h3>Count 2: how it reaches you</h3><p>Cattle carry O157:H7 without getting ill. It reaches people through undercooked minced meat, raw milk, unwashed produce, dirty water and unwashed hands.</p></div></article>
+    <article class="scene-card plain"><div data-i18n="sRes"><h3>Count 3: resisting treatment</h3><p>ESBL-producing and multidrug-resistant <em>E. coli</em> are a major global health problem: some of our most important antibiotics no longer work on them.</p></div></article>
+    <p class="heard" id="foeEnd" data-i18n="foeEnd">You have heard both sides.</p>
+    <button class="btn wide hand-over" type="button" data-go="friend" data-i18n="toFriend">← Back to the defence</button>
   </div>
   <p class="takeaway" data-k="sides" aria-live="polite"></p>
 </section>
@@ -155,33 +163,33 @@
 
 <!-- Exhibit 4: build a foe -->
 <section class="sec" id="build">
-  <p class="kicker" data-i18n="ex4">Exhibit 4</p>
+  <p class="kicker" data-i18n="ex5">Exhibit 5</p>
   <h2 data-i18n="buildH">Build a foe</h2>
   <p data-i18n="buildP">A friend does not turn bad on its own: it picks up new genes. Drag a gene onto the cell, or tap it.</p>
   <div class="build-stage" id="buildStage"><!--ART:BUILD--></div>
-  <div class="build-result" id="buildResult" aria-live="polite"></div>
   <div class="genes">
-    <button class="gene" type="button" data-gene="tox"><svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,3 30,8.5 30,19.5 20,25 10,19.5 10,8.5" fill="#F2B705" stroke="#1B1A17" stroke-width="2.5"/><path d="M20 25 V34 M20 31 l-8 6 M20 31 l8 6" stroke="#1B1A17" stroke-width="2.5" stroke-linecap="round"/><path d="M15 12 q5 -5 10 0" fill="none" stroke="#A61B29" stroke-width="3" stroke-linecap="round"/></svg><span data-i18n="gTox"><b>A virus</b>Shiga toxin gene</span></button>
-    <button class="gene" type="button" data-gene="stick"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="#2A5C9A" stroke-width="5"/><g stroke="#1B1A17" stroke-width="2.4" stroke-linecap="round"><path d="M20 4 v-3 M33 9 l2 -2 M36 20 h3 M33 31 l2 2 M20 36 v3 M7 31 l-2 2 M4 20 h-3 M7 9 l-2 -2"/></g></svg><span data-i18n="gStick"><b>A plasmid</b>sticky fimbriae genes</span></button>
-    <button class="gene" type="button" data-gene="res"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="none" stroke="#C9A03A" stroke-width="5"/><path d="M20 10 l8 3 v6 q0 7 -8 11 q-8 -4 -8 -11 v-6 z" fill="#fff" stroke="#1B1A17" stroke-width="2.2"/></svg><span data-i18n="gRes"><b>A plasmid</b>antibiotic-resistance gene</span></button>
+    <button class="gene" type="button" data-gene="tox" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,3 30,8.5 30,19.5 20,25 10,19.5 10,8.5" fill="#F2B705" stroke="#1B1A17" stroke-width="2.5"/><path d="M20 25 V34 M20 31 l-8 6 M20 31 l8 6" stroke="#1B1A17" stroke-width="2.5" stroke-linecap="round"/><path d="M15 12 q5 -5 10 0" fill="none" stroke="#A61B29" stroke-width="3" stroke-linecap="round"/></svg><span data-i18n="gTox"><b>A virus</b>Shiga toxin gene</span></button>
+    <button class="gene" type="button" data-gene="stick" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="#2A5C9A" stroke-width="5"/><g stroke="#1B1A17" stroke-width="2.4" stroke-linecap="round"><path d="M20 4 v-3 M33 9 l2 -2 M36 20 h3 M33 31 l2 2 M20 36 v3 M7 31 l-2 2 M4 20 h-3 M7 9 l-2 -2"/></g></svg><span data-i18n="gStick"><b>A plasmid</b>sticky fimbriae genes</span></button>
+    <button class="gene" type="button" data-gene="res" aria-pressed="false"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="none" stroke="#C9A03A" stroke-width="5"/><path d="M20 10 l8 3 v6 q0 7 -8 11 q-8 -4 -8 -11 v-6 z" fill="#fff" stroke="#1B1A17" stroke-width="2.2"/></svg><span data-i18n="gRes"><b>A plasmid</b>antibiotic-resistance gene</span></button>
   </div>
-  <button class="btn wide" id="buildReset" type="button" data-i18n="buildReset">Start again with a friend</button>
+  <div class="build-result" id="buildResult" aria-live="polite"></div>
+  <button class="btn wide" id="buildReset" type="button" hidden data-i18n="buildReset">Start again with a friend</button>
   <p class="takeaway" data-k="build" aria-live="polite"></p>
 </section>
 
 <!-- Exhibit 5: under the microscope -->
 <section class="sec" id="attack">
-  <p class="kicker" data-i18n="ex5">Exhibit 5</p>
+  <p class="kicker" data-i18n="ex6">Exhibit 6</p>
   <h2 data-i18n="attackH">Under the microscope: the attack</h2>
   <p data-i18n="attackP">Zoom into the wall of the large intestine and watch, step by step, how O157:H7 grabs a healthy cell, spreads along the gut, and sends its toxin into the blood.</p>
   <div class="attack-stage" id="attackStage" data-step="0"><!--ART:ATTACK--></div>
   <div class="attack-dots" id="attackDots" role="tablist"></div>
-  <div class="attack-card" id="attackCard" aria-live="polite"></div>
   <div class="attack-btns">
     <button class="btn" id="attackPrev" type="button" aria-label="Back">◀</button>
     <button class="btn" id="attackPlay" type="button"></button>
     <button class="btn solid" id="attackNext" type="button"></button>
   </div>
+  <div class="attack-card" id="attackCard" aria-live="polite"></div>
   <p class="takeaway" data-k="attack" aria-live="polite"></p>
 </section>
 
@@ -196,24 +204,26 @@
 
 <!-- Exhibit 6: grow it on a plate -->
 <section class="sec" id="culture">
-  <p class="kicker" data-i18n="ex6">Exhibit 6</p>
+  <p class="kicker" data-i18n="ex7">Exhibit 7</p>
   <h2 data-i18n="cultH">Grow it on a plate</h2>
   <p data-i18n="cultP">The lab’s first question: what grows? Pick a plate, pick a suspect, and slide the incubator clock.</p>
   <div class="plate" id="plate" data-medium="nut" data-strain="k12" style="--g:0">
     <div class="plate-art"><!--ART:PLATE--><span class="plate-read" id="plateRead" dir="auto">0 h · 37 °C</span></div>
-    <div class="strain-sw" role="group" aria-label="Choose a strain">
-      <button type="button" class="chip k12" data-strain="k12" aria-pressed="true" data-i18n="cultK12"><i>K-12</i> friend</button>
-      <button type="button" class="chip o157" data-strain="o157" aria-pressed="false" data-i18n="cultO157"><i>O157:H7</i> foe</button>
-    </div>
+    <p class="grp-l" data-i18n="cultPlateL">Plate</p>
     <div class="labsteps" role="group" aria-label="Choose an agar">
-      <article><button type="button" class="medium" data-medium="nut" aria-pressed="true"><i class="sw sw-nut"></i><b>Nutrient</b><small data-i18n="mNut">everything grows</small></button></article>
+      <article><button type="button" class="medium" data-medium="nut" aria-pressed="true"><i class="sw sw-nut"></i><b data-i18n="mNutB">Nutrient</b><small data-i18n="mNut">everything grows</small></button></article>
       <article><button type="button" class="medium" data-medium="mac" aria-pressed="false"><i class="sw sw-mac"></i><b>MacConkey</b><small data-i18n="mMac">lactose test</small></button></article>
       <article><button type="button" class="medium" data-medium="emb" aria-pressed="false"><i class="sw sw-emb"></i><b>EMB</b><small data-i18n="mEmb">green sheen</small></button></article>
       <article><button type="button" class="medium" data-medium="smac" aria-pressed="false"><i class="sw sw-smac"></i><b>SMAC</b><small data-i18n="mSmac">sorbitol test</small></button></article>
     </div>
+    <p class="grp-l" data-i18n="cultSuspL">Suspect</p>
+    <div class="strain-sw" role="group" aria-label="Choose a strain">
+      <button type="button" class="chip k12" data-strain="k12" aria-pressed="true" data-i18n="cultK12"><i>K-12</i> friend</button>
+      <button type="button" class="chip o157" data-strain="o157" aria-pressed="false" data-i18n="cultO157"><i>O157:H7</i> foe</button>
+    </div>
     <label class="hours-l" for="cultHours" data-i18n="cultHours">Incubate at 37 °C</label>
     <input type="range" class="range" id="cultHours" min="0" max="24" step="1" value="0" autocomplete="off" aria-label="Hours in the incubator">
-    <div class="hours-scale" dir="ltr"><span>0 h</span><span>12 h</span><span>24 h</span></div>
+    <div class="hours-scale" dir="ltr"><span data-i18n="h0">0 h</span><span data-i18n="h12">12 h</span><span data-i18n="h24">24 h</span></div>
     <div class="plate-card" id="plateCard" aria-live="polite"></div>
     <p class="note" data-i18n="cultNote">These are the real colours of each agar. Here pink or colourless is chemistry, not Team Friend or Team Foe.</p>
   </div>
@@ -222,17 +232,17 @@
 
 <!-- Exhibit 7: Gram stain -->
 <section class="sec" id="stain">
-  <p class="kicker" data-i18n="ex7">Exhibit 7</p>
+  <p class="kicker" data-i18n="ex8">Exhibit 8</p>
   <h2 data-i18n="stainH">Stain it</h2>
   <p data-i18n="stainP">Smear a colony on a slide and run the Gram stain, the oldest test in the lab (1884). Five steps decide: purple or pink?</p>
   <div class="attack-stage smear" id="stainStage" data-step="0" data-err="0"><!--ART:SMEAR--></div>
   <div class="attack-dots" id="stainDots" role="tablist"></div>
-  <div class="attack-card" id="stainCard" aria-live="polite"></div>
   <div class="attack-btns">
     <button class="btn stp-prev" id="stainPrev" type="button" aria-label="Back">◀</button>
     <button class="btn" id="stainPlay" type="button"></button>
     <button class="btn solid" id="stainNext" type="button"></button>
   </div>
+  <div class="attack-card" id="stainCard" aria-live="polite"></div>
   <button class="btn wide oops" id="stainOops" type="button"></button>
   <p class="takeaway" data-k="stain" aria-live="polite"></p>
 </section>
@@ -248,7 +258,7 @@
 
 <!-- 6. You are the judge -->
 <section class="sec" id="judge">
-  <p class="kicker" data-i18n="judgeK">Your turn</p>
+  <p class="kicker" data-i18n="ex9">Exhibit 9</p>
   <h2 data-i18n="judgeH">You are the judge</h2>
   <p data-i18n="judgeP">Eight strains stand before you. Guilty of harming humans, or not guilty? Tap a verdict, or swipe the card.</p>
   <div class="game" id="game">
@@ -263,7 +273,9 @@
       <div class="stamp-wrap"><!--ART:STAMP--></div>
       <p class="score" id="score" dir="ltr"></p>
       <p id="scoreLine"></p>
+      <p class="missed" id="missed" hidden></p>
       <div class="btns"><button class="btn solid" id="bShare" data-i18n="share">Share my score</button><button class="btn" id="bAgain" data-i18n="again">Judge again</button></div>
+      <a class="btn solid wide to-verdict" href="#safe" data-i18n="toVerdict">Before the verdict: cook the burger ↓</a>
     </div>
   </div>
   <template id="cardData">
@@ -297,10 +309,10 @@
 
 <!-- 7. Stay safe -->
 <section class="sec" id="safe">
-  <p class="kicker" data-i18n="ordK">The court orders</p>
+  <p class="kicker" data-i18n="ex10">Exhibit 10</p>
   <h2 data-i18n="ordH">Keep Team Foe out</h2>
   <div class="cook">
-    <p class="cook-h" data-i18n="cookH"><b>Test order 2:</b> cook the burger. Slide to heat it.</p>
+    <p class="cook-h" data-i18n="cookH"><b>Cook the burger.</b> Slide to heat it.</p>
     <div class="cook-art"><!--ART:BURGER--><span class="cook-read" id="cookRead" dir="ltr">20 °C</span></div>
     <input type="range" id="cookTemp" min="20" max="80" step="1" value="20" aria-label="Cooking temperature">
     <div class="cook-scale" dir="ltr"><span>20 °C</span><span class="mark">▲ 71 °C</span></div>
@@ -319,22 +331,28 @@
 <!-- 8. Verdict and credits -->
 <section class="sec verdict" id="verdict">
   <div class="scales"><!--ART:SCALES--></div>
-  <p class="kicker" data-i18n="vK">Verdict</p>
-  <p class="vbig" data-i18n="vBig">It depends on<br><b>the strain.</b></p>
-  <p class="vote-back" id="voteBack" hidden></p>
+    <p class="vbig" data-i18n="vBig">It depends on<br><b>the strain.</b></p>
   <p data-i18n="vSub">A few strains: <b class="r">guilty.</b> The species: <b class="g">not guilty.</b></p>
+  <p class="vote-back" id="voteBack" hidden></p>
+  <div class="verdict-claim" id="verdictClaim" hidden>
+    <p data-i18n="vClaimP">All ten pieces of evidence are in. The court has a certificate for you.</p>
+    <a class="btn solid claim-go" href="#cert" data-i18n="vClaimGo">Claim my certificate</a>
+  </div>
 </section>
 
 <!-- Certificate -->
 <section class="sec cert" id="cert">
-  <p class="kicker" data-i18n="certK">Your certificate</p>
-  <h2 data-i18n="certH">Collect all 10 pieces of evidence</h2>
+  <h2 data-i18n="certH">Your certificate</h2>
   <p data-i18n="certP">Every exhibit you complete adds a piece of evidence. Collect all ten and the court gives you a certificate to save.</p>
+  <div class="cert-next" id="certNext" aria-live="polite"></div>
+  <h3 class="evi-left-h" id="eviLeftH" hidden>Still to collect</h3>
   <ul class="evi-grid" id="eviGrid"></ul>
   <div class="cert-form">
     <label for="certName" data-i18n="certName">Your name (it stays on your phone)</label>
-    <input id="certName" type="text" maxlength="40" autocomplete="off" placeholder="Name">
+    <input id="certName" type="text" maxlength="60" autocomplete="off" placeholder="Name">
+    <figure class="cert-preview" id="certPreviewWrap" hidden><canvas id="certPreview" width="1600" height="1130" role="img" aria-label="Your certificate"></canvas></figure>
     <button class="btn solid wide" id="certSave" type="button" disabled data-i18n="certSave">Save my certificate</button>
+    <p class="cert-saved" id="certSaved" aria-live="polite"></p>
     <p class="note" id="certNote"></p>
   </div>
 </section>

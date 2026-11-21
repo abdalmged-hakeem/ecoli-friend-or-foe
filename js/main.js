@@ -13,6 +13,11 @@
 
   /* ---------- evidence: 10 badges, kept on this phone only ---------- */
   const EVI = ["zoom", "sim", "parts", "sides", "build", "attack", "culture", "stain", "judge", "cook"];
+  // the section that holds each piece of evidence, in the same order: exhibit n = evidence n
+  const EVI_SEC = ["size", "twenty", "inside", "hearing", "build", "attack", "culture", "stain", "judge", "safe"];
+  const etag = (i) => `<span class="etag" aria-hidden="true">${i + 1}</span>`;
+  // has the visitor reached the verdict? (checked on scroll; the 10/10 moment waits for it)
+  let verdictSeen = false;
   const evidence = (() => {
     let got = [];
     try { got = JSON.parse(load("evidence") || "[]").filter((k) => EVI.includes(k)); } catch (_) { got = []; }
@@ -20,30 +25,66 @@
     function paint() {
       $("#eviCount").textContent = got.length;
       const L = T().evi;
-      $("#eviGrid").innerHTML = EVI.map((k, i) => `<li class="${got.includes(k) ? "got" : ""}"><span class="ei" aria-hidden="true">${L.icons[i]}</span>`
-        + `<b>${L.names[i]}</b><small>${got.includes(k) ? L.done : L.todo}</small></li>`).join("");
+      // only what is still missing: what was collected is counted in the line above the list
+      $("#eviGrid").innerHTML = EVI.map((k, i) => got.includes(k) ? ""
+        : `<li><a href="#${EVI_SEC[i]}">${etag(i)}<b>${L.names[i]}</b><small>${L.todo} ${i + 1}</small></a></li>`).join("");
+      $("#eviLeftH").hidden = got.length === 0 || got.length === EVI.length;
+      $("#eviLeftH").textContent = L.leftH;
       $("#certSave").disabled = got.length < EVI.length;
+      const miss = EVI.findIndex((k) => !got.includes(k));
+      $("#certNext").hidden = miss < 0;
+      $("#certNext").innerHTML = miss < 0 ? "" : `<p>${L.have(got.length)}</p><p>${L.nextUp(miss + 1, L.exNames[miss])}</p>`
+        + `<a class="btn solid wide" href="#${EVI_SEC[miss]}">${L.go}</a>`;
       $("#certNote").textContent = got.length < EVI.length ? L.left(EVI.length - got.length) : L.ready;
       $("#eviPill").classList.toggle("full", got.length === EVI.length);
+      $("#verdictClaim").hidden = got.length < EVI.length;
+      document.dispatchEvent(new CustomEvent("evidencechange", { detail: got.length }));
       for (const el of $$(".takeaway")) {
         const on = got.includes(el.dataset.k);
         el.classList.toggle("on", on);
-        el.innerHTML = on ? `<span class="tk-stamp" aria-hidden="true">${L.icons[EVI.indexOf(el.dataset.k)]}</span><span>${L.take[EVI.indexOf(el.dataset.k)]}</span>` : "";
+        el.innerHTML = on ? `${etag(EVI.indexOf(el.dataset.k))}<span>${L.take[EVI.indexOf(el.dataset.k)]}</span>` : "";
       }
     }
     function award(k) {
       if (got.includes(k)) return;
       got.push(k); store("evidence", JSON.stringify(got)); paint();
       const t = $("#toast"), L = T().evi, i = EVI.indexOf(k);
-      t.innerHTML = `<span aria-hidden="true">${L.icons[i]}</span> ${L.toast(L.names[i], got.length)}`;
-      t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+      t.innerHTML = `${etag(i)} <span>${L.toast(L.names[i], got.length)}</span>`;
+      // the tenth piece gets its own moment, but never on top of the verdict: before the verdict
+      // has been read, the verdict section carries the claim instead
+      if (got.length === EVI.length && verdictSeen) { t.classList.remove("show"); showAllIn(); }
+      else { t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600); }
       if (navigator.vibrate) { try { navigator.vibrate(30); } catch (_) { /* ignore */ } }
       const pill = $("#eviPill"); pill.classList.remove("pop"); void pill.offsetWidth; pill.classList.add("pop");
       refreshMenu();
     }
-    return { award, paint, all: () => got.length === EVI.length, has: (k) => got.includes(k) };
+    return { award, paint, all: () => got.length === EVI.length, has: (k) => got.includes(k), EVI, EVI_SEC };
   })();
   window.evidence = evidence;
+  // the tenth piece of evidence: a moment of its own, with the way to the certificate
+  let allInY = 0;
+  function showAllIn() {
+    const box = $("#allIn");
+    allInY = scrollY;
+    box.hidden = false;
+    void box.offsetWidth;          // commit the hidden state first, so the entrance runs
+    box.classList.add("show");
+    $("#allInGo").focus({ preventScroll: true });
+  }
+  const hideAllIn = () => { const box = $("#allIn"); box.classList.remove("show"); setTimeout(() => { box.hidden = true; }, reduce ? 0 : 300); };
+  $("#allInClose").addEventListener("click", hideAllIn);
+  // both claim buttons (the sheet and the one in the verdict) go to the name field
+  $$(".claim-go").forEach((a) => a.addEventListener("click", (e) => {
+    e.preventDefault(); if (!$("#allIn").hidden) hideAllIn();
+    $(".cert-form").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    setTimeout(() => $("#certName").focus({ preventScroll: true }), reduce ? 0 : 450);
+  }));
+  // the sheet steps aside as soon as the visitor scrolls on
+  addEventListener("scroll", () => {
+    if (!$("#allIn").hidden && $("#allIn").classList.contains("show") && Math.abs(scrollY - allInY) > 160) hideAllIn();
+    if (!verdictSeen) { const r = $("#verdict .vbig").getBoundingClientRect(); if (r.height && r.top < innerHeight * 0.75 && r.bottom > 0) verdictSeen = true; }
+  }, { passive: true });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#allIn").hidden) hideAllIn(); });
 
   /* ---------- run animations only while a section is on screen ---------- */
   const io = new IntersectionObserver((entries) => {
@@ -139,17 +180,19 @@
   /* ---------- 4. anatomy hotspots ---------- */
   const card = $("#partCard");
   let part = null;
+  const seen = new Set();
   const showPart = (flash) => {
     const [t, d] = part ? T().parts[part] : T().partDefault;
-    card.innerHTML = `<h3>${t}</h3><p>${d}</p>`;
+    const total = $$(".hot").length, n = seen.size;
+    card.innerHTML = `<h3>${t}</h3><p>${d}</p><small class="seen${n === total ? " all" : ""}">${n === total ? T().seenAll : T().seenOf(n, total)}</small>`;
+    $$(".hot").forEach((h) => h.setAttribute("aria-label", T().parts[h.dataset.part][0].replace(/^\d+ · /, "")));
     if (flash) { card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
   };
-  const seen = new Set();
   const pick = (el) => {
     part = el.dataset.part;
     seen.add(part);
     if (seen.size === $$(".hot").length) evidence.award("parts");
-    $$(".hot").forEach((h) => h.classList.toggle("on", h === el));
+    $$(".hot").forEach((h) => { h.classList.toggle("on", h === el); h.classList.toggle("seen", seen.has(h.dataset.part)); });
     showPart(true);
   };
   $$(".hot").forEach((h) => {
@@ -165,14 +208,32 @@
     $("#panelFriend").hidden = side !== "friend";
     $("#panelFoe").hidden = side !== "foe";
     $('meta[name="theme-color"]').content = side === "foe" ? "#F6DDD7" : "#F2ECDD";
-    if (side === "foe") evidence.award("sides");
   };
   $$(".switch button").forEach((b) => b.addEventListener("click", () => setSide(b.dataset.side)));
+  // the hand-over buttons switch sides and bring the switch back into view
+  $$(".hand-over").forEach((b) => b.addEventListener("click", () => {
+    setSide(b.dataset.go);
+    $(".switch").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }));
+  // "heard both sides" means reading down the prosecution's case: its top must be seen first,
+  // then its end. Switching sides (by tab or hand-over) starts the reading over.
+  let foeTopSeen = false;
+  const foeTop = $("#panelFoe .witness"), foeEnd = $("#foeEnd");
+  const onScreen = (el, from, to) => { const r = el.getBoundingClientRect(); return r.height > 0 && r.top < innerHeight * to && r.bottom > innerHeight * from; };
+  const readCheck = () => {
+    if (document.body.dataset.side !== "foe" || evidence.has("sides")) return;
+    if (onScreen(foeTop, 0, 0.8)) foeTopSeen = true;
+    else if (foeTopSeen && onScreen(foeEnd, 0.05, 0.9)) evidence.award("sides");
+  };
+  addEventListener("scroll", readCheck, { passive: true });
+  $$(".switch button, .hand-over").forEach((b) => b.addEventListener("click", () => { foeTopSeen = false; }, { capture: true }));
+  $$(".switch button").forEach((b) => b.addEventListener("click", () => setTimeout(readCheck, 50)));
 
   /* ---------- 6. you are the judge ---------- */
   const deck = $("#deck"), fb = $("#feedback"), bNext = $("#bNext"), bG = $("#bGuilty"), bI = $("#bInnocent");
   const DATA = $("#cardData").content.children;
   let idx = 0, score = 0, current = null, voted = false, lastDir = "left", lastRight = false, finished = false;
+  let wrong = [];
   const tag = (d) => (lang === "ar" ? d.dataset.tagAr : d.dataset.tag);
   const why = (d) => (lang === "ar" ? d.dataset.whyAr : d.dataset.why);
 
@@ -206,7 +267,7 @@
     voted = true;
     const d = DATA[idx], truth = d.dataset.guilty === "1";
     lastRight = guilty === truth;
-    if (lastRight) score++;
+    if (lastRight) score++; else wrong.push(d.dataset.name);
     lastDir = guilty ? "left" : "right";
     current.style.transform = "";
     current.classList.add("judged", truth ? "is-guilty" : "is-innocent");
@@ -215,6 +276,8 @@
     bNext.hidden = false;
     paintCard();
     bNext.focus({ preventScroll: true });
+    const nb = bNext.getBoundingClientRect();
+    if (nb.bottom > innerHeight - 12) scrollBy({ top: nb.bottom - innerHeight + 24, behavior: reduce ? "auto" : "smooth" });
   }
   function next() {
     current.classList.add(lastDir === "left" ? "out-left" : "out-right");
@@ -225,7 +288,9 @@
     $("#score").textContent = `${score} / ${DATA.length}`;
     const r = T().ranks;
     const rank = score === 8 ? r[0] : score >= 6 ? r[1] : score >= 4 ? r[2] : r[3];
-    $("#scoreLine").textContent = `${rank} ${T().remember}`;
+    $("#scoreLine").textContent = rank;
+    $("#missed").hidden = !wrong.length;
+    $("#missed").innerHTML = wrong.length ? T().missed(wrong.join(", ")) : "";
   }
   function finish() {
     finished = true;
@@ -250,7 +315,7 @@
   bI.addEventListener("click", () => vote(false));
   bNext.addEventListener("click", next);
   $("#bAgain").addEventListener("click", () => {
-    idx = 0; score = 0; finished = false;
+    idx = 0; score = 0; finished = false; wrong = [];
     deck.hidden = false; $("#result").hidden = true; $(".verdict-btns").hidden = false; deal();
   });
   $("#bShare").addEventListener("click", async () => {
@@ -261,13 +326,27 @@
     } catch (_) { /* user cancelled */ }
   });
 
+  /* ---------- the route the visitor chose, so Session V speaks to a quick-trial visitor honestly ---------- */
+  const routeOf = () => { try { return sessionStorage.getItem("route"); } catch (_) { return null; } };
+  const paintRoute = () => {
+    const p = $("#act5 .act-p");
+    const heard = ["zoom", "sim", "parts", "sides", "build", "attack", "culture", "stain"].filter((k) => evidence.has(k)).length;
+    if (routeOf() === "quick" && heard < 4) p.textContent = T().act5Quick;
+    else p.innerHTML = lang === "ar" && window.I18N.ar.page.act5P ? window.I18N.ar.page.act5P : p.dataset.en || p.innerHTML;
+  };
+  $$(".route").forEach((a) => a.addEventListener("click", () => {
+    try { sessionStorage.setItem("route", a.classList.contains("solid") ? "quick" : "full"); } catch (_) { /* private mode */ }
+    paintRoute();
+  }));
+  document.addEventListener("evidencechange", paintRoute);
+
   /* ---------- the first vote, remembered at the verdict ---------- */
   const poll = (() => {
     const done = $("#pollDone"), back = $("#voteBack");
     function paint() {
       const v = load("firstVote"), V = T().vote;
       $$("#poll [data-vote]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.vote === v));
-      done.textContent = v ? V.done : "";
+      done.textContent = v ? T().pollRoute : "";
       back.hidden = !v;
       back.innerHTML = v ? V.back[v] : "";
     }
@@ -286,12 +365,21 @@
       el.innerHTML = lang === "ar" && page[k] ? page[k] : el.dataset.en;
     }
     document.title = T().docTitle;
+    // the judge game's stamp only says the evidence is heard: the verdict itself is kept for the verdict
+    $$(".stamp-wrap text").forEach((t, i) => { t.textContent = T().stamps.page[i]; });
+    const ARIA = window.I18N.ar.aria;
+    for (const el of $$("[aria-label]:not(.hot)")) {
+      if (el.dataset.ariaEn === undefined) el.dataset.ariaEn = el.getAttribute("aria-label");
+      const en = el.dataset.ariaEn;
+      el.setAttribute("aria-label", lang === "ar" && ARIA[en] ? ARIA[en] : en);
+    }
     setZoom(+zoom.dataset.level);
     showPart(false);
     sim.refresh();
     if (finished) paintResult(); else if (current) paintCard();
     evidence.paint();
     poll.paint();
+    paintRoute();
     refreshMenu();
     document.dispatchEvent(new CustomEvent("langchange", { detail: lang }));
   }
@@ -342,7 +430,8 @@
       const done = k && evidence.has(k);
       const id = s.id || "credits";
       if (!s.id) s.id = "credits";
-      return `<li><a href="#${id}"${done ? ' class="done"' : ""}><span class="tick" aria-hidden="true">${done ? "✓" : ""}</span>${h.textContent.trim()}</a></li>`;
+      const n = k ? EVI.indexOf(k) + 1 : "";
+      return `<li><a href="#${id}"${done ? ' class="done"' : ""} data-n="${n}"><span class="tick" aria-hidden="true">${done ? "✓" : ""}</span>${h.textContent.trim()}</a></li>`;
     }).join("");
   }
   const closeMenu = () => { menuPanel.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); };
@@ -356,7 +445,7 @@
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
 
-  let ticking = false;
+  let ticking = false, lastY = scrollY, fabTimer = 0;
   const onScroll = () => {
     if (ticking) return;
     ticking = true;
@@ -364,7 +453,19 @@
       const max = document.documentElement.scrollHeight - innerHeight;
       const y = scrollY;
       progFill.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
-      toTop.classList.toggle("show", y > innerHeight * 1.2);
+      const up = y < lastY - 4, down = y > lastY + 4;
+      const hide = () => toTop.classList.toggle("show", false);
+      // what would the button cover? if it is something to tap, stay out of the way
+      const fr = toTop.getBoundingClientRect();
+      const under = document.elementsFromPoint(fr.left + fr.width / 2, fr.top + fr.height / 2).find((e) => e !== toTop && !toTop.contains(e));
+      const overControl = !!(under && under.closest("button, a, input, label, .gene, .jcard, .hot, .medium"));
+      if (y < innerHeight * 1.2 || down) hide();
+      else if (overControl) hide();
+      else if (up) {
+        toTop.classList.toggle("show", true);
+        clearTimeout(fabTimer); fabTimer = setTimeout(hide, 2500);
+      }
+      if (up || down) lastY = y;
       ticking = false;
     });
   };
