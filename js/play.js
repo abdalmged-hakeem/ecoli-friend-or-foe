@@ -236,6 +236,8 @@
       x.fillStyle = "#1B1A17"; x.font = `400 38px ${sans}`;
       c.body.forEach((l, i) => x.fillText(l, W / 2, 650 + i * 56));
       x.font = `600 64px ${serif}`; x.fillText(c.verdict, W / 2, 860);
+      x.font = `${ar ? "" : "italic "}500 34px ${serif}`; x.fillStyle = "#0F6B5C";
+      x.fillText(c.thanks, W / 2, 935, 780);           // kept narrow so it never runs under the stamp
       x.font = `400 28px ${sans}`; x.fillStyle = "#6A655A";
       x.fillText(new Date().toLocaleDateString(ar ? "ar" : "en-GB", { year: "numeric", month: "long", day: "numeric" }), W / 2, 1000);
       // the court stamp, drawn from the page's own SVG
